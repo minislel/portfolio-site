@@ -209,7 +209,8 @@ onMounted(() => {
   }
   function project({ x, y, z }) {
     const fov = radius * 2.8;
-    const s   = fov / (fov + z * radius * 0.5);
+    const denom = fov + z * radius * 0.5;
+    const s   = denom > 0.001 ? fov / denom : 1;
     return { sx: cx + x * radius * s, sy: cy + y * radius * s, scale: s, z };
   }
 
@@ -223,6 +224,8 @@ onMounted(() => {
     last = ts;
 
     ctx.clearRect(0, 0, W, H);
+
+    if (!Number.isFinite(cx) || !Number.isFinite(cy) || !Number.isFinite(radius) || radius <= 0) return;
 
     // Rotation update
     rotY  += 0.00009 * dt;
@@ -272,6 +275,8 @@ onMounted(() => {
       const t2  = arc.progress;
       const tx  = (1-t2)*(1-t2)*a.sx + 2*(1-t2)*t2*mx2 + t2*t2*b.sx;
       const ty2 = (1-t2)*(1-t2)*a.sy + 2*(1-t2)*t2*my2 + t2*t2*b.sy;
+
+      if (!Number.isFinite(tx) || !Number.isFinite(ty2)) continue;
 
       const gh = ctx.createRadialGradient(tx, ty2, 0, tx, ty2, 6);
       gh.addColorStop(0, `rgba(${r},${g},${bl},0.95)`);

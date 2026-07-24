@@ -120,7 +120,7 @@
         </div>
       </PortfolioCard>
 
-      <!-- Card 4: AI Web Deployments & Local SEO (col-span-1) -->
+      <!-- Card 4: rskoparki.pl - Deployment & SEO (col-span-1) -->
       <PortfolioCard class="bento-card web-crafting-card" accent="orange">
         <!-- Blueprint Corner Decors -->
         <div class="decor-corner top-left">+</div>
@@ -138,23 +138,36 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bento-icon"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             </div>
             <div class="bento-title-group">
-              <span class="bento-tag tag-orange">{{ t('Wdrożenia & SEO', 'Deployments & SEO') }}</span>
-              <h3 class="bento-card-title">AI Web Deployments</h3>
+              <span class="bento-tag tag-orange">{{ t('Wdrożenie & SEO', 'Deployment & SEO') }}</span>
+              <h3 class="bento-card-title">rskoparki.pl</h3>
             </div>
           </div>
           
-          <p class="bento-tagline">{{ t('Szybkie witryny tworzone przy użyciu AI i z widocznością w Google', 'Fast websites built using AI and optimized for Google visibility') }}</p>
+          <p class="bento-tagline">{{ t('Witryna dla firmy z usługami wykopów ziemnych', 'Business website for earthworks & excavation services') }}</p>
           
           <div class="bento-details vertical-details">
-            <!-- Double Glass Inner Tiles -->
+            <!-- Section 1: Standard text sub-tile -->
             <div class="detail-sub-tile">
-              <span class="detail-label">{{ t('Zakres działań', 'Scope of activities') }}</span>
-              <p class="detail-text">{{ t('Tworzenie i stawianie stron internetowych z użyciem AI, wdrożenia na Vercel, konfiguracja domen, optymalizacja SEO oraz zakładanie i optymalizacja wizytówek w Google Business Profile.', 'Building and deploying websites using AI, Vercel hosting, domain setup, SEO optimization, and creating/optimizing Google Business Profiles.') }}</p>
+              <span class="detail-label">{{ t('Zakres prac', 'Scope of work') }}</span>
+              <p class="detail-text rskoparki-text">
+                {{ t('Strona z wykopami ziemnymi dla ojca: deploy na Vercel, domena, optymalizacja SEO & GEO i wizytówka w Google.', 'Earthworks website for father: Vercel deployment, domain setup, SEO & GEO optimization, and Google profile.') }}
+              </p>
             </div>
-            <div class="detail-sub-tile highlighted-sub-tile orange-glow-border">
-              <span class="detail-label orange-text">{{ t('Impact & Zysk', 'Impact & Outcome') }}</span>
-              <p class="detail-text">{{ t('Kompleksowa obecność małego biznesu w sieci w kilka dni - od zera, przez szybki hosting, po widoczność lokalną w Google Maps.', 'Complete online presence for small businesses in days - from scratch, through fast hosting, to local search visibility in Google Maps.') }}</p>
-            </div>
+
+            <!-- Section 2: Rectangular graphic banner wizytówka with link button only -->
+            <a href="https://rskoparki.pl" target="_blank" rel="noopener noreferrer" class="rskoparki-banner-tile">
+              <img :src="rskoparkiBrightImg" alt="rskoparki.pl" class="rskoparki-bright-bg" />
+              <div class="rskoparki-bright-overlay"></div>
+              <div class="rskoparki-banner-content">
+                <div class="rskoparki-card-action">
+                  <span>rskoparki.pl</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </PortfolioCard>
@@ -166,6 +179,7 @@
 import { computed } from 'vue';
 import PortfolioCard from './PortfolioCard.vue';
 import { useLocale } from '../utils/useLocale.js';
+import rskoparkiBrightImg from '../assets/rskoparki_bright.webp';
 
 const { t } = useLocale();
 
@@ -473,6 +487,111 @@ const certificates = computed(() => [
   font-size: 0.82rem;
   color: var(--text-muted);
   line-height: 1.5;
+}
+
+.web-crafting-card .bento-tagline {
+  font-size: 0.95rem;
+}
+
+.web-crafting-card .detail-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.rskoparki-link {
+  color: var(--accent-orange, #ff9f0a);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
+}
+
+.rskoparki-link:hover {
+  color: #ffa424;
+  text-shadow: 0 0 10px rgba(255, 159, 10, 0.5);
+}
+
+/* Banner Graphic Wizytówka Tile */
+.rskoparki-banner-tile {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 145px;
+  padding: 1.5rem 1.25rem;
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.45), 0 0 18px rgba(255, 200, 0, 0.22);
+  text-decoration: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.rskoparki-banner-tile:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(255, 225, 0, 0.9);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), 0 0 30px rgba(255, 215, 0, 0.45);
+}
+
+.rskoparki-bright-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.rskoparki-banner-tile:hover .rskoparki-bright-bg {
+  transform: scale(1.08);
+}
+
+.rskoparki-bright-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(12, 14, 20, 0.15) 0%, rgba(12, 14, 20, 0.6) 100%);
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.rskoparki-banner-tile:hover .rskoparki-bright-overlay {
+  background: radial-gradient(circle at center, rgba(12, 14, 20, 0.05) 0%, rgba(12, 14, 20, 0.45) 100%);
+}
+
+.rskoparki-banner-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.rskoparki-card-action {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #0b0c10;
+  font-weight: 850;
+  font-size: 1.05rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(255, 193, 7, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rskoparki-banner-tile:hover .rskoparki-card-action {
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(255, 193, 7, 0.7);
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
 }
 
 /* Responsive adjustments */
