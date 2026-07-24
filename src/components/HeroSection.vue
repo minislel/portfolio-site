@@ -1,5 +1,8 @@
 <template>
   <section class="hero-container">
+    <!-- Animated globe rendered behind the card -->
+    <canvas ref="canvasRef" class="hero-globe-canvas" aria-hidden="true"></canvas>
+
     <!-- Centered Hero Card -->
     <PortfolioCard class="hero-card" accent="cyan">
       <div class="hero-content">
@@ -23,14 +26,226 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
 import PortfolioCard from './PortfolioCard.vue';
 import { useLocale } from '../utils/useLocale.js';
 
 const { t } = useLocale();
+const canvasRef = ref(null);
+
+onMounted(() => {
+  const canvas = canvasRef.value;
+  const ctx = canvas.getContext('2d');
+  let W, H, cx, cy, radius;
+  let animId = null;
+
+  const PALETTE = [
+    [0,   242, 254],  // cyan
+    [191, 90,  242],  // purple
+    [57,  255, 20 ],  // green
+    [10,  132, 255],  // blue
+  ];
+
+  // ── Dots on a Fibonacci sphere ────────────────────────────────────────
+  const DOT_COUNT = 420;
+  const dots = Array.from({ length: DOT_COUNT }, (_, i) => {
+    const phi   = Math.acos(1 - (2 * (i + 0.5)) / DOT_COUNT);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+    return {
+      ox: Math.sin(phi) * Math.cos(theta),
+      oy: Math.cos(phi),
+      oz: Math.sin(phi) * Math.sin(theta),
+      pulse: Math.random() * Math.PI * 2,
+      ci:    Math.floor(Math.random() * 4),
+    };
+  });
+
+  // ── Arc connections between random dot pairs ─────────────────────────
+  const ARC_COUNT = 60;
+  const arcs = Array.from({ length: ARC_COUNT }, () => ({
+    i:        Math.floor(Math.random() * DOT_COUNT),
+    j:        Math.floor(Math.random() * DOT_COUNT),
+    progress: Math.random(),
+    speed:    0.00012 + Math.random() * 0.00015,
+    ci:       Math.floor(Math.random() * 4),
+  }));
+
+  // ── Resize ─────────────────────────────────────────────────────────────
+  // JS owns all sizing/positioning — no CSS calc tricks.
+  const BLEED = 280; // px outside the container on each side
+  function resize() {
+    const dpr  = window.devicePixelRatio || 1;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const cW   = rect.width;
+    const cH   = rect.height;
+
+    W = cW + BLEED * 2;
+    H = cH + BLEED * 2;
+
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    canvas.style.left   = -BLEED + 'px';
+    canvas.style.top    = -BLEED + 'px';
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Center of canvas == center of container
+    cx = W / 2;
+    cy = H / 2;
+
+    // Radius: visible around card but not overwhelming
+    radius = Math.min(
+      Math.max(cW * 0.43, cH * 0.54),
+      480
+    );
+  }
+
+  // ── Mouse parallax ─────────────────────────────────────────────────────
+  let mx = 0, my = 0;
+  function onMouse(e) {
+    mx = (e.clientX / window.innerWidth  - 0.5);
+    my = (e.clientY / window.innerHeight - 0.5);
+  }
+  window.addEventListener('mousemove', onMouse, { passive: true });
+
+  // ── Rotation state ──────────────────────────────────────────────────────
+  let rotY = 0, rotX = 0, tRotX = 0;
+
+  // ── 3-D helpers ─────────────────────────────────────────────────────────
+  function ry(x, y, z, a) {
+    const c = Math.cos(a), s = Math.sin(a);
+    return { x: c*x + s*z, y, z: -s*x + c*z };
+  }
+  function rx(x, y, z, a) {
+    const c = Math.cos(a), s = Math.sin(a);
+    return { x, y: c*y - s*z, z: s*y + c*z };
+  }
+  function project({ x, y, z }) {
+    const fov = radius * 2.8;
+    const s   = fov / (fov + z * radius * 0.5);
+    return { sx: cx + x * radius * s, sy: cy + y * radius * s, scale: s, z };
+  }
+
+  // ── Draw loop ─────────────────────────────────────────────────────────
+  let last = 0;
+  function draw(ts) {
+    animId = requestAnimationFrame(draw);
+    const dt = Math.min(ts - last, 32);
+    last = ts;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Rotation update
+    rotY  += 0.00009 * dt;
+    tRotX  = my * 0.5;
+    rotX  += (tRotX - rotX) * 0.035;
+
+    // Project all dots
+    const proj = dots.map(d => {
+      let p = ry(d.ox, d.oy, d.oz, rotY);
+      p     = rx(p.x, p.y, p.z, rotX + mx * 0.2);
+      return { ...project(p), pulse: d.pulse, ci: d.ci };
+    });
+
+    // ── Globe atmosphere glow ────────────────────────────────────────────
+    const grd = ctx.createRadialGradient(cx, cy, radius * 0.55, cx, cy, radius * 1.2);
+    grd.addColorStop(0,    'rgba(0,242,254,0)');
+    grd.addColorStop(0.72, 'rgba(0,242,254,0.028)');
+    grd.addColorStop(1,    'rgba(191,90,242,0.07)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.15, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // ── Arcs ─────────────────────────────────────────────────────────────
+    for (const arc of arcs) {
+      arc.progress += arc.speed * dt;
+      if (arc.progress >= 1) arc.progress -= 1;
+
+      const a = proj[arc.i], b = proj[arc.j];
+      if (a.z < -0.35 && b.z < -0.35) continue;
+
+      const [r, g, bl] = PALETTE[arc.ci];
+      const vis = ((Math.min(a.z, b.z) + 1) / 2);
+
+      // Faint connection line
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      // Slight arc bulge via quadratic bezier
+      const mx2 = (a.sx + b.sx) / 2 - (b.sy - a.sy) * 0.18;
+      const my2 = (a.sy + b.sy) / 2 + (b.sx - a.sx) * 0.18;
+      ctx.quadraticCurveTo(mx2, my2, b.sx, b.sy);
+      ctx.strokeStyle = `rgba(${r},${g},${bl},${vis * 0.22})`;
+      ctx.lineWidth   = 0.6;
+      ctx.stroke();
+
+      // Travelling photon along the bezier
+      const t2  = arc.progress;
+      const tx  = (1-t2)*(1-t2)*a.sx + 2*(1-t2)*t2*mx2 + t2*t2*b.sx;
+      const ty2 = (1-t2)*(1-t2)*a.sy + 2*(1-t2)*t2*my2 + t2*t2*b.sy;
+
+      const gh = ctx.createRadialGradient(tx, ty2, 0, tx, ty2, 6);
+      gh.addColorStop(0, `rgba(${r},${g},${bl},0.95)`);
+      gh.addColorStop(1, `rgba(${r},${g},${bl},0)`);
+      ctx.beginPath();
+      ctx.arc(tx, ty2, 6, 0, Math.PI * 2);
+      ctx.fillStyle = gh;
+      ctx.fill();
+    }
+
+    // ── Dots ──────────────────────────────────────────────────────────────
+    for (const p of proj) {
+      const vis = (p.z + 1) / 2;
+      if (vis < 0.06) continue;
+      const [r, g, bl] = PALETTE[p.ci];
+      const pulseFactor = 0.75 + 0.25 * Math.sin(ts * 0.0009 + p.pulse);
+      const sz    = p.scale * 2.1 * pulseFactor;
+      const alpha = vis * 0.88;
+
+      ctx.beginPath();
+      ctx.arc(p.sx, p.sy, sz, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${bl},${alpha})`;
+      ctx.fill();
+
+      if (vis > 0.7) {
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy, sz * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${bl},${alpha * 0.1})`;
+        ctx.fill();
+      }
+    }
+
+    // ── Dashed latitude ring ──────────────────────────────────────────────
+    const tiltedB = Math.abs(Math.sin(rotX));
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, radius, radius * (tiltedB < 0.02 ? 0.02 : tiltedB), 0, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,242,254,0.06)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 9]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────────────
+  resize();
+  animId = requestAnimationFrame(draw);
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas.parentElement);
+
+  onUnmounted(() => {
+    cancelAnimationFrame(animId);
+    window.removeEventListener('mousemove', onMouse);
+    ro.disconnect();
+  });
+});
 </script>
 
 <style scoped>
 .hero-container {
+  position: relative;
   min-height: 80vh;
   display: flex;
   align-items: center;
@@ -39,9 +254,19 @@ const { t } = useLocale();
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
+  overflow: visible;
+}
+
+/* JS sets left/top/width/height directly — only need position:absolute here */
+.hero-globe-canvas {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .hero-card {
+  position: relative;
+  z-index: 1;
   width: 100%;
   padding: 4.5rem 3rem !important;
   text-align: center;
