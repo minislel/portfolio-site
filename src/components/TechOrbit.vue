@@ -19,10 +19,10 @@
 
     <!-- Interactive Planets -->
     <div 
-      v-for="p in planets" 
+      v-for="(p, idx) in planetsData" 
       :key="p.name"
+      :ref="el => setPlanetRef(el, idx)"
       :class="['planet-node', 'accent-' + p.accent, { 'is-active': activePlanet === p.name }]"
-      :style="p.style"
       @mouseenter="activePlanet = p.name"
       @mouseleave="activePlanet = null"
       @click="triggerPulse(p)"
@@ -142,7 +142,12 @@ const planetsData = ref([
 ]);
 
 // Animation states
-const planets = ref([]);
+const planetElRefs = ref([]);
+function setPlanetRef(el, idx) {
+  if (el) planetElRefs.value[idx] = el;
+}
+let isVisible = true;
+let observer = null;
 let animationFrameId = null;
 
 // Track pulses triggered by clicking planets
@@ -291,8 +296,8 @@ function updateAndRender() {
     }
   });
 
-  // 3. Project and update Planet Elements coordinates
-  const updatedPlanets = planetsData.value.map(p => {
+  // 3. Project and update Planet Elements coordinates directly via native DOM style
+  planetsData.value.forEach((p, idx) => {
     // Rotation logic: pause or decelerate speed on hover
     const currentSpeed = activePlanet.value === p.name ? p.speed * 0.12 : p.speed;
     p.angle += currentSpeed;
@@ -317,20 +322,19 @@ function updateAndRender() {
     // Depth indices calculation (higher Z index = front)
     const zIndex = Math.round((1000 - zRot) * 10);
     const finalScale = scale * 0.82;
+    const opacity = Math.max(0.4, (1 - zRot / 300));
     
-    return {
-      ...p,
-      style: {
-        transform: `translate3d(${px}px, ${py}px, 0) scale(${finalScale})`,
-        zIndex: zIndex,
-        opacity: Math.max(0.4, (1 - zRot / 300)) // slightly dim the background planets
-      }
-    };
+    const el = planetElRefs.value[idx];
+    if (el) {
+      el.style.transform = `translate3d(${px}px, ${py}px, 0) scale(${finalScale})`;
+      el.style.zIndex = zIndex;
+      el.style.opacity = opacity;
+    }
   });
   
-  planets.value = updatedPlanets;
-  
-  animationFrameId = requestAnimationFrame(updateAndRender);
+  if (isVisible) {
+    animationFrameId = requestAnimationFrame(updateAndRender);
+  }
 }
 
 function resize() {
@@ -338,7 +342,7 @@ function resize() {
   const canvas = canvasRef.value;
   const wrapper = wrapperRef.value;
   const rect = wrapper.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
@@ -357,11 +361,29 @@ onMounted(() => {
   resize();
   window.addEventListener('resize', resize);
   
+  observer = new IntersectionObserver(([entry]) => {
+    const wasVisible = isVisible;
+    isVisible = entry.isIntersecting;
+    if (isVisible && !wasVisible) {
+      animationFrameId = requestAnimationFrame(updateAndRender);
+    } else if (!isVisible && animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }, { threshold: 0.05 });
+
+  if (wrapperRef.value) {
+    observer.observe(wrapperRef.value);
+  }
+  
   animationFrameId = requestAnimationFrame(updateAndRender);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', resize);
+  if (observer) {
+    observer.disconnect();
+  }
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }

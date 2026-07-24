@@ -364,27 +364,48 @@ function updateAndRender() {
     }
   }
   
-  // 5. Draw particles (with depth shading & glow)
+// Cached sprite canvases for ultra-fast GPU blitting without radial gradient allocations
+const spriteCache = {};
+
+function initSprites() {
+  const colors = {
+    cyan: { r: 0, g: 242, b: 254 },
+    purple: { r: 191, g: 90, b: 242 },
+    green: { r: 57, g: 255, b: 20 },
+    blue: { r: 10, g: 132, b: 255 }
+  };
+  
+  for (const [key, c] of Object.entries(colors)) {
+    const sCanvas = document.createElement('canvas');
+    sCanvas.width = 64;
+    sCanvas.height = 64;
+    const sCtx = sCanvas.getContext('2d');
+    
+    const grad = sCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    grad.addColorStop(0.35, `rgba(${c.r}, ${c.g}, ${c.b}, 0.85)`);
+    grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
+    
+    sCtx.fillStyle = grad;
+    sCtx.beginPath();
+    sCtx.arc(32, 32, 32, 0, Math.PI * 2);
+    sCtx.fill();
+    
+    spriteCache[key] = sCanvas;
+  }
+}
+
+  // 5. Draw particles using cached sprites (blazing fast GPU blitting)
   for (let i = 0; i < projectedParticles.length; i++) {
     const p = projectedParticles[i];
-    
-    // Fade color depth (z is typically -SPHERE_RADIUS to SPHERE_RADIUS)
-    const depthRatio = Math.max(0, Math.min(1, (p.z + SPHERE_RADIUS) / (SPHERE_RADIUS * 2)));
-    
-    // Particles in front are brighter, particles in back are darker and semi-transparent
     const opacity = Math.max(0.12, (1 - p.z / 250) * 0.85);
+    const sprite = spriteCache[p.colorType] || spriteCache.cyan;
+    const drawSize = p.size * 4;
     
-    // Radial gradient glow on each particle
-    const radGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2);
-    radGrad.addColorStop(0, `rgba(255, 255, 255, ${opacity})`);
-    radGrad.addColorStop(0.3, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${opacity})`);
-    radGrad.addColorStop(1, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, 0)`);
-    
-    ctx.fillStyle = radGrad;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.globalAlpha = opacity;
+    ctx.drawImage(sprite, p.x - drawSize / 2, p.y - drawSize / 2, drawSize, drawSize);
   }
+  ctx.globalAlpha = 1.0;
   
   // 6. Draw physical shockwave expanding wave ring if active
   if (shockwave.active) {
@@ -401,17 +422,22 @@ function updateAndRender() {
     ctx.stroke();
   }
   
-  // Queue next frame
-  animationFrameId = requestAnimationFrame(updateAndRender);
+  // Queue next frame if visible
+  if (isVisible) {
+    animationFrameId = requestAnimationFrame(updateAndRender);
+  }
 }
 
-// Adjust canvas resolution dynamically based on parent container size
+let isVisible = true;
+let observer = null;
+
+// Adjust canvas resolution dynamically based on parent container size (Capped DPR)
 function resizeCanvas() {
   if (!canvasRef.value || !wrapperRef.value) return;
   const canvas = canvasRef.value;
   const wrapper = wrapperRef.value;
   
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const rect = wrapper.getBoundingClientRect();
   
   // Set logical dimensions matching the rect size
@@ -426,11 +452,28 @@ function resizeCanvas() {
 }
 
 onMounted(() => {
+  initSprites();
   initParticles();
   resizeCanvas();
   
   // Watch resize
   window.addEventListener('resize', resizeCanvas);
+  
+  // Intersection Observer to pause animation loop when scrolled offscreen
+  observer = new IntersectionObserver(([entry]) => {
+    const wasVisible = isVisible;
+    isVisible = entry.isIntersecting;
+    if (isVisible && !wasVisible) {
+      animationFrameId = requestAnimationFrame(updateAndRender);
+    } else if (!isVisible && animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }, { threshold: 0.05 });
+  
+  if (wrapperRef.value) {
+    observer.observe(wrapperRef.value);
+  }
   
   // Run animation
   animationFrameId = requestAnimationFrame(updateAndRender);
@@ -438,6 +481,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', resizeCanvas);
+  if (observer) {
+    observer.disconnect();
+  }
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }

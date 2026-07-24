@@ -132,10 +132,9 @@ const techCategories = computed(() => [
   font-weight: 600;
   padding: 0.45rem 0.95rem;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: #ffffff;
-  backdrop-filter: blur(12px);
   transition: var(--transition-liquid);
 }
 

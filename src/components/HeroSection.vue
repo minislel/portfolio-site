@@ -215,7 +215,9 @@ onMounted(() => {
 
   // ── Draw loop ─────────────────────────────────────────────────────────
   let last = 0;
+  let isGlobeVisible = true;
   function draw(ts) {
+    if (!isGlobeVisible) return;
     animId = requestAnimationFrame(draw);
     const dt = Math.min(ts - last, 32);
     last = ts;
@@ -320,6 +322,18 @@ onMounted(() => {
   const ro = new ResizeObserver(resize);
   ro.observe(canvas.parentElement);
 
+  const io = new IntersectionObserver(([entry]) => {
+    const wasVis = isGlobeVisible;
+    isGlobeVisible = entry.isIntersecting;
+    if (isGlobeVisible && !wasVis) {
+      animId = requestAnimationFrame(draw);
+    } else if (!isGlobeVisible && animId) {
+      cancelAnimationFrame(animId);
+      animId = null;
+    }
+  }, { threshold: 0.05 });
+  io.observe(canvas.parentElement);
+
   // Start typewriter
   twTimer = setTimeout(tick, 600);
 
@@ -327,6 +341,7 @@ onMounted(() => {
     cancelAnimationFrame(animId);
     window.removeEventListener('mousemove', onMouse);
     ro.disconnect();
+    io.disconnect();
     clearTimeout(twTimer);
   });
 });
@@ -374,11 +389,10 @@ onMounted(() => {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.1);
+  background: rgba(0, 242, 254, 0.12);
   border: 1px solid rgba(0, 242, 254, 0.3);
   padding: 0.4rem 1.25rem;
   border-radius: 100px;
-  backdrop-filter: blur(10px);
   letter-spacing: 0.05em;
   max-width: 100%;
   word-break: break-word;
@@ -477,12 +491,11 @@ onMounted(() => {
   font-size: 0.95rem;
   font-weight: 600;
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.85rem 2rem;
   border-radius: 100px;
   text-decoration: none;
-  backdrop-filter: blur(10px);
   transition: var(--transition-liquid);
 }
 

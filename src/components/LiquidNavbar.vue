@@ -335,14 +335,12 @@ onUnmounted(() => {
   border-radius: 100px;
   opacity: 0;
   
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.22) 0%, rgba(191, 90, 242, 0.18) 100%);
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.28) 0%, rgba(191, 90, 242, 0.22) 100%);
   border: 1px solid rgba(0, 242, 254, 0.5);
   box-shadow: 
     0 4px 18px rgba(0, 242, 254, 0.35),
     0 0 12px rgba(191, 90, 242, 0.25),
     inset 0 1px 1px rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
   
   will-change: transform, width, height;
@@ -445,7 +443,7 @@ onUnmounted(() => {
 
 /* Locale switcher button (iOS style emoji) */
 .locale-switcher-btn {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.35rem;
   border-radius: 50%;
@@ -456,8 +454,6 @@ onUnmounted(() => {
   transition: var(--transition-liquid);
   width: 32px;
   height: 32px;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
 }
 
 .locale-switcher-btn:hover {

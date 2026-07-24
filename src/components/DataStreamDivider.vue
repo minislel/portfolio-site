@@ -179,27 +179,52 @@ function updateAndRender() {
     }
     py += Math.sin(px * 0.015 + Date.now() * 0.002) * 1.5;
     
-    // Render packet with radial glow
+    // Render packet using cached sprite blitting
     const alpha = p.brightness * (isHovered.value ? 0.95 : 0.65);
-    const grad = ctx.createRadialGradient(px, py, 0, px, py, p.size * 2.5);
-    grad.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
-    grad.addColorStop(0.4, `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha * 0.8})`);
-    grad.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
+    const drawSize = p.size * 5;
     
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(px, py, p.size * 2.5, 0, Math.PI * 2);
-    ctx.fill();
+    if (packetSprite) {
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(packetSprite, px - drawSize / 2, py - drawSize / 2, drawSize, drawSize);
+    }
   });
+  ctx.globalAlpha = 1.0;
   
-  animationFrameId = requestAnimationFrame(updateAndRender);
+  if (isVisible) {
+    animationFrameId = requestAnimationFrame(updateAndRender);
+  }
 }
+
+let packetSprite = null;
+
+function initPacketSprite() {
+  const sCanvas = document.createElement('canvas');
+  sCanvas.width = 32;
+  sCanvas.height = 32;
+  const sCtx = sCanvas.getContext('2d');
+  const color = rgbColor.value;
+  
+  const grad = sCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
+  grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+  grad.addColorStop(0.4, `rgba(${color.r}, ${color.g}, ${color.b}, 0.8)`);
+  grad.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
+  
+  sCtx.fillStyle = grad;
+  sCtx.beginPath();
+  sCtx.arc(16, 16, 16, 0, Math.PI * 2);
+  sCtx.fill();
+  
+  packetSprite = sCanvas;
+}
+
+let isVisible = true;
+let observer = null;
 
 function resize() {
   if (!canvasRef.value || !wrapperRef.value) return;
   const canvas = canvasRef.value;
   const wrapper = wrapperRef.value;
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   const rect = wrapper.getBoundingClientRect();
   
   canvas.width = rect.width * dpr;
@@ -212,17 +237,37 @@ function resize() {
 }
 
 onMounted(() => {
+  initPacketSprite();
   // Initialize packets
   packets = Array.from({ length: PACKET_COUNT }, () => new Packet(window.innerWidth));
   
   resize();
   window.addEventListener('resize', resize);
   
+  // Pause animation when offscreen
+  observer = new IntersectionObserver(([entry]) => {
+    const wasVisible = isVisible;
+    isVisible = entry.isIntersecting;
+    if (isVisible && !wasVisible) {
+      animationFrameId = requestAnimationFrame(updateAndRender);
+    } else if (!isVisible && animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }, { threshold: 0.05 });
+
+  if (wrapperRef.value) {
+    observer.observe(wrapperRef.value);
+  }
+  
   animationFrameId = requestAnimationFrame(updateAndRender);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', resize);
+  if (observer) {
+    observer.disconnect();
+  }
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }

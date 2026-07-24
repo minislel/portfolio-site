@@ -1,0 +1,53 @@
+# Extended Technical Profile — Marcin Świderski
+
+## Personal Summary
+Marcin Świderski is a .NET Backend Engineer and Infrastructure Builder based in Cracow, Poland. He specializes in designing robust REST APIs, microservice architectures with C# and .NET 10, automated job scheduling with Hangfire, containerized deployments with Docker, and self-hosted infrastructure built on TrueNAS SCALE.
+
+## Technical Skills Matrix
+- **Core Languages**: C#, TypeScript, JavaScript, SQL, C++, PHP, HTML5, CSS3
+- **Frameworks & Ecosystem**: .NET 10 / .NET Core, ASP.NET Core REST API, Hangfire, Entity Framework Core, Vue 3, Flutter, Semantic Kernel
+- **Databases & Storage**: PostgreSQL, ZFS Storage, SQL Server
+- **DevOps & Infrastructure**: Docker, TrueNAS SCALE, Cloudflare Tunnels, Tailscale VPN, Linux (Ubuntu/Debian), Datadog APM, Git, Bitbucket Pipelines, CI/CD
+- **Practices**: Clean Architecture, Object-Oriented Programming (OOP), SOLID Principles, Prompt Engineering, LLM Integration, Agile/Scrum
+
+## Career Timeline
+### Junior .NET Engineer | Maxima Consulting
+*January 2026 – June 2026*
+- Developed high-performance REST APIs in .NET for an international Warehouse Management System (WMS) integration project supporting a US client.
+- Built a custom APM (Application Performance Monitoring) library integrated into Hangfire for background job diagnostics and telemetry.
+- Configured Datadog tracing and APM instrumentation across backend services.
+- Participated in production deployment routines and continuous integration pipelines.
+
+### Software Engineer Intern | Maxima Consulting
+*October 2025 – December 2025*
+- Completed an intensive engineering onboarding program covering enterprise software architecture and RESTful design patterns.
+- Collaborated in daily Scrum meetings and sprint planning within a cross-border engineering team.
+
+### Applied Computer Science Student (B.Eng.) | WSEI w Krakowie
+*October 2023 – Present (Expected Spring 2027)*
+- Specializing in software development, backend engineering, and database management.
+- Active member of the Student Government, leading event logistics, student hackathons, and technical workshops.
+
+### IT Intern | Szpital SPZOZ w Krynicy-Zdroju
+*February 2021 – March 2021*
+- Handled IT helpdesk tickets, user account provisioning, hardware diagnostic routines, and Linux terminal administration.
+
+### IT Technician | ZSP w Krynicy-Zdroju
+*September 2018 – May 2022*
+- Hands-on hardware diagnostics, network cable crimping and rack setup, Windows Server configuration, and early programming in C++ and PHP.
+
+## Projects Showcase
+### DropFlow (SaaS Dropshipping Platform)
+An automated SaaS solution linking e-commerce marketplaces to streamline product listing, order routing, and inventory tracking. Features AI-powered title and description generation optimized for search engines via Semantic Kernel and custom LLM prompts.
+
+### HomeLab Infrastructure
+A self-hosted private server stack running TrueNAS SCALE on custom hardware (Ryzen 9 5900X, 64GB RAM). Features ZFS pool redundancy, 14+ active Docker containers, secure remote access via Tailscale and Cloudflare Tunnels, automated backup retention, and high-availability web hosting (hosting this portfolio site).
+
+### Tinder Copilot
+A Proof-of-Concept Chrome extension that embeds an AI assistant into dating app chat interfaces. Uses DOM observers and LLM context extraction to provide real-time autocomplete suggestions, conversational icebreakers, and chess-style move evaluations.
+
+## Contact Information
+- Email: marcin4kt@gmail.com
+- Portfolio Website: https://portfolio.minislel.xyz/
+- GitHub: https://github.com/minislel
+- LinkedIn: https://linkedin.com/in/minislel

@@ -2,7 +2,7 @@
   <PortfolioCard :accent="accent" :class="['project-showcase-card', statusType ? 'card-status-' + statusType : '']">
     <!-- Top Image Preview Thumbnail -->
     <div v-if="image" class="card-image-wrapper">
-      <img :src="image" :alt="title" :class="[statusType === 'abandoned' ? 'img-abandoned' : '']" />
+      <img :src="image" :alt="title" :class="[statusType === 'abandoned' ? 'img-abandoned' : '']" loading="lazy" />
       <div class="image-overlay-glow"></div>
 
       <!-- Graphic Status Ribbons -->
@@ -21,7 +21,7 @@
       <!-- Header Row: Logo on Left, Left-Aligned Title on Right -->
       <div class="project-header-row">
         <div v-if="logoImg || logoSvg" :class="['project-logo-badge', 'logo-' + accent, statusType === 'abandoned' ? 'logo-abandoned-tint' : '', logoImg ? 'logo-img-badge' : '']">
-          <img v-if="logoImg" :src="logoImg" :alt="title + ' logo'" class="logo-img" />
+          <img v-if="logoImg" :src="logoImg" :alt="title + ' logo'" class="logo-img" loading="lazy" />
           <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="logoSvg"></svg>
         </div>
         <div class="project-title-group">
@@ -196,7 +196,7 @@ defineProps({
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  backdrop-filter: blur(16px);
+  background: rgba(12, 14, 22, 0.85);
   z-index: 10;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
 }
@@ -416,10 +416,9 @@ defineProps({
   font-weight: 600;
   padding: 0.38rem 0.8rem;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: #ffffff;
-  backdrop-filter: blur(12px);
   transition: var(--transition-liquid);
 }
 

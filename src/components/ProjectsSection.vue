@@ -32,11 +32,11 @@
 import { computed } from 'vue';
 import ProjectCard from './ProjectCard.vue';
 import { useLocale } from '../utils/useLocale.js';
-import tinderImg from '../assets/project_tinder_copilot.jpg';
-import dropflowImg from '../assets/project_dropflow.jpg';
-import homelabImg from '../assets/project_homelab.jpg';
-import dropflowIcon from '../assets/dropflow-icon.png';
-import tinderCopilotIcon from '../assets/tinder-copilot-icon.png';
+import tinderImg from '../assets/project_tinder_copilot.webp';
+import dropflowImg from '../assets/project_dropflow.webp';
+import homelabImg from '../assets/project_homelab.webp';
+import dropflowIcon from '../assets/dropflow-icon.webp';
+import tinderCopilotIcon from '../assets/tinder-copilot-icon.webp';
 
 const { t } = useLocale();
 

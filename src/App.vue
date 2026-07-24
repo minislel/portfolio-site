@@ -112,9 +112,7 @@ main {
 footer {
   margin-top: 5rem;
   padding: 3rem 1.5rem;
-  background: rgba(12, 14, 22, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(12, 14, 22, 0.85);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 10;
   position: relative;

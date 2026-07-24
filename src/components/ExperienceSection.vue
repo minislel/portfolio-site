@@ -47,7 +47,7 @@
                   @click="item.logoImg === zspLogo ? openKubsikPopup() : null"
                   :title="item.logoImg === zspLogo ? t('Kliknij mnie! 🥚', 'Click me! 🥚') : null"
                 >
-                  <img v-if="item.logoImg" :src="item.logoImg" :alt="item.company" class="logo-image" />
+                  <img v-if="item.logoImg" :src="item.logoImg" :alt="item.company" class="logo-image" loading="lazy" />
                   <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="item.iconSvg"></svg>
                 </div>
                 <div class="company-info">
@@ -90,7 +90,7 @@
               </div>
 
               <div class="kubsik-gif-wrapper">
-                <img :src="kubsikGif" alt="Kubsik GIF" class="kubsik-gif-media" />
+                <video :src="kubsikMedia" autoplay loop muted playsinline class="kubsik-gif-media"></video>
               </div>
 
               <p class="kubsik-footer-text">
@@ -108,11 +108,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getTechIconMarkup } from '../utils/techIcons.js';
 import { useLocale } from '../utils/useLocale.js';
-import zspLogo from '../assets/zsp.png';
-import spzozLogo from '../assets/spzoz-krynica.png';
-import wseiLogo from '../assets/wsei.png';
-import maximaLogo from '../assets/maxima.png';
-import kubsikGif from '../assets/kubsik.gif';
+import zspLogo from '../assets/zsp.webp';
+import spzozLogo from '../assets/spzoz-krynica.webp';
+import wseiLogo from '../assets/wsei.webp';
+import maximaLogo from '../assets/maxima.webp';
+import kubsikMedia from '../assets/kubsik.mp4';
 
 const { t } = useLocale();
 
@@ -134,39 +134,47 @@ const handleKeyDown = (e) => {
   }
 };
 const scrollContainer = ref(null);
-let autoScrollInterval = null;
+let autoScrollAnimId = null;
 let resumeTimeout = null;
 let userActivityTimeout = null;
 let touchUserActive = false;
 let scrollSpeed = 0.55; 
 let scrollDirection = 1; 
+let isTimelineVisible = true;
+let timelineObserver = null;
+
+function stepAutoScroll() {
+  if (!isTimelineVisible || touchUserActive || !scrollContainer.value) {
+    autoScrollAnimId = null;
+    return;
+  }
+
+  const el = scrollContainer.value;
+  const maxScroll = el.scrollWidth - el.clientWidth;
+  if (maxScroll > 0) {
+    if (scrollDirection === 1) {
+      el.scrollLeft += scrollSpeed;
+      if (el.scrollLeft >= maxScroll - 1) {
+        scrollDirection = -1;
+      }
+    } else {
+      el.scrollLeft -= scrollSpeed;
+      if (el.scrollLeft <= 1) {
+        scrollDirection = 1;
+      }
+    }
+  }
+  
+  autoScrollAnimId = requestAnimationFrame(stepAutoScroll);
+}
 
 function startAutoScroll() {
-  if (autoScrollInterval || touchUserActive) return;
+  if (autoScrollAnimId || touchUserActive) return;
   if (resumeTimeout) clearTimeout(resumeTimeout);
   
-  // Introduce a slight delay (1s) before resuming scroll to let manual interactions finish
   resumeTimeout = setTimeout(() => {
-    if (autoScrollInterval || touchUserActive) return;
-    autoScrollInterval = setInterval(() => {
-      const el = scrollContainer.value;
-      if (!el) return;
-      
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      if (maxScroll <= 0) return;
-      
-      if (scrollDirection === 1) {
-        el.scrollLeft += scrollSpeed;
-        if (el.scrollLeft >= maxScroll - 1) {
-          scrollDirection = -1;
-        }
-      } else {
-        el.scrollLeft -= scrollSpeed;
-        if (el.scrollLeft <= 1) {
-          scrollDirection = 1;
-        }
-      }
-    }, 16);
+    if (autoScrollAnimId || touchUserActive) return;
+    autoScrollAnimId = requestAnimationFrame(stepAutoScroll);
   }, 1000);
 }
 
@@ -179,9 +187,9 @@ function stopAutoScroll() {
     clearTimeout(resumeTimeout);
     resumeTimeout = null;
   }
-  if (autoScrollInterval) {
-    clearInterval(autoScrollInterval);
-    autoScrollInterval = null;
+  if (autoScrollAnimId) {
+    cancelAnimationFrame(autoScrollAnimId);
+    autoScrollAnimId = null;
   }
 }
 
@@ -217,12 +225,27 @@ function scheduleAutoScrollResume() {
 }
 
 onMounted(() => {
+  timelineObserver = new IntersectionObserver(([entry]) => {
+    const wasVis = isTimelineVisible;
+    isTimelineVisible = entry.isIntersecting;
+    if (isTimelineVisible && !wasVis) {
+      startAutoScroll();
+    } else if (!isTimelineVisible) {
+      stopAutoScroll();
+    }
+  }, { threshold: 0.05 });
+
+  if (scrollContainer.value) {
+    timelineObserver.observe(scrollContainer.value);
+  }
+
   startAutoScroll();
   window.addEventListener('keydown', handleKeyDown);
 });
 
 onUnmounted(() => {
   stopAutoScroll();
+  if (timelineObserver) timelineObserver.disconnect();
   if (userActivityTimeout) clearTimeout(userActivityTimeout);
   window.removeEventListener('keydown', handleKeyDown);
   document.body.style.overflow = '';
@@ -338,8 +361,7 @@ function scrollRightBtn() {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: rgba(12, 14, 22, 0.9);
-  backdrop-filter: blur(20px);
+  background: rgba(12, 14, 22, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #ffffff;
   display: flex;
@@ -406,11 +428,10 @@ function scrollRightBtn() {
   font-size: 0.75rem;
   font-weight: 700;
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(18, 22, 35, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 0.2rem 0.65rem;
   border-radius: 100px;
-  backdrop-filter: blur(10px);
   white-space: nowrap;
 }
 
@@ -518,10 +539,9 @@ function scrollRightBtn() {
   font-size: 0.72rem;
   padding: 0.25rem 0.65rem;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  backdrop-filter: blur(10px);
 }
 
 .tech-icon-container {

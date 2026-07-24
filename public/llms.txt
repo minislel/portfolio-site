@@ -1,0 +1,44 @@
+# Marcin Świderski — Portfolio & Technical Profile
+> .NET Backend Engineer, Infrastructure Specialist & AI Tools Builder based in Cracow, Poland.
+
+## Core Summary
+- Name: Marcin Świderski
+- Role: Junior .NET Engineer / Backend Software Engineer
+- Primary Tech Stack: C# / .NET 10, ASP.NET Core, PostgreSQL, Hangfire, Docker, TrueNAS SCALE, TypeScript, Vue.js, Clean Architecture
+- Contact: marcin4kt@gmail.com
+- GitHub: https://github.com/minislel
+- LinkedIn: https://linkedin.com/in/minislel
+- Live Website: https://portfolio.minislel.xyz/
+
+## Professional Experience
+- **Junior .NET Engineer** @ Maxima Consulting (01/2026 – 06/2026)
+  - Developed production-grade .NET REST APIs in a cross-border integration project for a US-based client (Warehouse Management System).
+  - Authored a custom APM library in Hangfire, configured Datadog tracing, wrote unit test suites, and managed deployments.
+- **Software Engineer Intern** @ Maxima Consulting (10/2025 – 12/2025)
+  - Enterprise software architecture onboarding, REST API implementation, Git workflows, daily Scrum in an international team.
+- **Applied Computer Science (B.Eng.) Student** @ WSEI w Krakowie (10/2023 – Spring 2027)
+  - Engineering focus on web backend development, .NET/C#, databases, and active leadership in the Student Government.
+- **IT Intern** @ Szpital SPZOZ w Krynicy-Zdroju (02/2021 – 03/2021)
+  - Operational helpdesk support, Linux server administration, hardware inventory, end-user technical support.
+- **IT Technician** @ ZSP w Krynicy-Zdroju (09/2018 – 05/2022)
+  - Computer assembly, Windows Server administration, networking fundamentals, initial PHP/C++ development.
+
+## Featured Projects
+1. **DropFlow** (SaaS Platform — Work in Progress)
+   - E-commerce dropshipping automation platform with 1-click offer creation, LLM/Semantic Kernel AI title & description optimization, automated order fulfillment.
+   - Stack: C# / .NET 10, Semantic Kernel, Flutter, PostgreSQL, Hangfire, Clean Architecture.
+2. **HomeLab / Infrastructure** (Active Private Server Environment)
+   - Multi-disk TrueNAS SCALE hypervisor hosting private services, Docker containerization, Cloudflare Tunnels, Tailscale mesh VPN, automated ZFS backups.
+   - Note: Hosts this portfolio website.
+3. **Tinder Copilot** (Chrome Extension AI Assistant PoC)
+   - Real-time dating conversation assistant with full chat context analysis, inline text autocomplete (GitHub Copilot style), and chess-style move quality ratings.
+   - Stack: TypeScript, Chrome Extension API, LLM API integration.
+
+## Certifications & Qualifications
+- **Anthropic Education**: Building with the Claude API, Intro to Model Context Protocol (MCP), Claude Code in Action, Intro to Agent Skills (2026)
+- **Certiport Information Technology Specialist**: JavaScript, Network Security, Computational Thinking, Software Development, Networking, Databases (2024)
+- **Microsoft**: AZ-900 Microsoft Azure Fundamentals (2024)
+
+## Full Documentation & Links
+- [Complete Resume / LLM Profile](https://portfolio.minislel.xyz/llms-full.txt)
+- [Download CV PDF](https://portfolio.minislel.xyz/CV_Marcin_Swiderski.pdf)

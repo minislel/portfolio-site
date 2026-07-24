@@ -10,7 +10,7 @@
       <!-- Card 1: Photo (33%) -->
       <PortfolioCard class="photo-card" accent="purple">
         <div class="photo-wrapper">
-          <img :src="currentAvatar" alt="Marcin Świderski" />
+          <img :src="currentAvatar" alt="Marcin Świderski" loading="lazy" />
         </div>
       </PortfolioCard>
 
@@ -92,9 +92,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import PortfolioCard from './PortfolioCard.vue';
-import avatar1 from '../assets/avatar_1.jpg';
-import avatar2 from '../assets/avatar_2.jpg';
-import avatar3 from '../assets/avatar_3.jpg';
+import avatar1 from '../assets/avatar_1.webp';
+import avatar2 from '../assets/avatar_2.webp';
+import avatar3 from '../assets/avatar_3.webp';
 import avatarEaster from '../assets/avatar_easter.gif';
 import { useLocale } from '../utils/useLocale.js';
 
