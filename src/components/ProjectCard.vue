@@ -160,6 +160,7 @@ defineProps({
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 25%;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
 }
 
@@ -500,12 +501,24 @@ defineProps({
   transform: translateY(-2px);
 }
 
+@media (max-width: 768px) {
+  .card-image-wrapper {
+    height: 185px;
+  }
+  .card-image-wrapper img {
+    object-position: center 15%;
+  }
+}
+
 @media (max-width: 480px) {
   .project-card-body {
     padding: 1.25rem 1rem 0.5rem 1rem;
   }
   .card-image-wrapper {
-    height: 140px;
+    height: 165px;
+  }
+  .card-image-wrapper img {
+    object-position: center 15%;
   }
   .project-logo-badge {
     width: 36px;

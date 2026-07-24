@@ -10,7 +10,7 @@
       <!-- Card 1: Photo (33%) -->
       <PortfolioCard class="photo-card" accent="purple">
         <div class="photo-wrapper">
-          <img :src="currentAvatar" alt="Marcin Świderski" loading="lazy" />
+          <img :src="currentAvatar" alt="Marcin Świderski" loading="lazy" :style="{ objectPosition: avatarPosition }" />
         </div>
       </PortfolioCard>
 
@@ -102,6 +102,13 @@ const { t } = useLocale();
 
 const staticAvatars = [avatar1, avatar2, avatar3];
 const currentAvatar = ref(avatar1);
+
+const avatarPosition = computed(() => {
+  if (currentAvatar.value === avatar1) return 'center 22%';
+  if (currentAvatar.value === avatar2) return 'center 65%';
+  if (currentAvatar.value === avatar3) return 'center 28%';
+  return 'center 30%';
+});
 
 onMounted(() => {
   // Check URL params first (e.g. ?easter=true or ?gif=true) or roll a 1/10000 chance

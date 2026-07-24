@@ -96,21 +96,18 @@ function handleMouseLeave() {
   relY.value = 0.5;
 }
 
-// Inline transform styles for performant 3D tilt
+// Inline transform styles for performant liquid card hover
 const cardStyle = computed(() => {
   if (!isHovered.value) {
     return {
-      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+      transform: 'translate3d(0, 0, 0)',
       transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease'
     };
   }
   
-  const rotateX = (0.5 - relY.value) * props.tiltAmount; // Tilt up/down
-  const rotateY = (relX.value - 0.5) * props.tiltAmount; // Tilt left/right
-  
   return {
-    transform: `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`,
-    transition: 'transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease, box-shadow 0.4s ease'
+    transform: 'translate3d(0, -4px, 0) scale(1.008)',
+    transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease, box-shadow 0.4s ease'
   };
 });
 
@@ -141,7 +138,8 @@ const glareStyle = computed(() => {
 <style scoped>
 .portfolio-card {
   position: relative;
-  transform-style: preserve-3d;
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
 }
 
 .card-spotlight {

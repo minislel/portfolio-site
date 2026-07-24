@@ -129,8 +129,8 @@ html, body {
 /* Portfolio Card (iOS Liquid Glass Aesthetic) */
 .portfolio-card {
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
   border: 1px solid var(--border-glass);
   border-radius: var(--squircle-radius);
   padding: 2.25rem;
