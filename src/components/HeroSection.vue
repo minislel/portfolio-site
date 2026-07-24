@@ -11,10 +11,7 @@
           {{ t('Cześć! jestem', 'Hi! I am') }} <span class="gradient-text">Marcin Świderski</span>
         </h1>
         <p class="hero-subtitle">
-          {{ t(
-            'Kiedyś dowoziłem jedzenie, teraz dowożę rozwiązania backendowe.',
-            'I used to deliver food, now I deliver backend solutions.'
-          ) }}
+          {{ t('Kiedyś dowoziłem jedzenie, teraz dowożę', 'I used to deliver food, now I deliver') }}&nbsp;<span class="typewriter-wrap"><span class="typewriter-text">{{ typedText }}</span><span class="typewriter-cursor" :class="{ blink: isCursorBlinking }">▌</span></span>
         </p>
         <div class="hero-actions">
           <a href="#projekty" class="btn-primary">{{ t('Zobacz projekty ➔', 'View projects ➔') }}</a>
@@ -26,12 +23,100 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import PortfolioCard from './PortfolioCard.vue';
 import { useLocale } from '../utils/useLocale.js';
 
-const { t } = useLocale();
+const { t, locale } = useLocale();
 const canvasRef = ref(null);
+
+// ── Typewriter ────────────────────────────────────────────────────────────
+const phrasesPL = [
+  ' stabilne rozwiązania .NET',
+  ' szybkie REST API',
+  ' Dockerowe kontenery',
+  'czysty, działający kod',
+  'działające mikroserwisy',
+  'wyniki, a nie wymówki.',
+];
+const phrasesEN = [
+  'solid .NET solutions',
+  'fast REST APIs',
+  'Docker containers',
+  'clean, working code',
+  'working microservices',
+  'results, not excuses.',
+];
+
+const typedText = ref('');
+const isCursorBlinking = ref(false);
+
+let phraseIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let twTimer = null;
+
+const TYPE_SPEED   = 55;
+const DELETE_SPEED = 30;
+const PAUSE_AFTER  = 1800;
+const PAUSE_BEFORE = 300;
+
+function getPhrases() {
+  return locale?.value === 'en' ? phrasesEN : phrasesPL;
+}
+
+function resetTypewriter() {
+  clearTimeout(twTimer);
+  phraseIndex = 0;
+  charIndex = 0;
+  isDeleting = false;
+  isCursorBlinking.value = false;
+  typedText.value = '';
+  twTimer = setTimeout(tick, PAUSE_BEFORE);
+}
+
+watch(locale, () => {
+  resetTypewriter();
+});
+
+function tick() {
+  const phrases = getPhrases();
+  const current = phrases[phraseIndex];
+
+  if (!isDeleting) {
+    // Typing
+    isCursorBlinking.value = false;
+    charIndex++;
+    typedText.value = current.slice(0, charIndex);
+
+    if (charIndex === current.length) {
+      // Done typing — pause then start deleting
+      isCursorBlinking.value = true;
+      twTimer = setTimeout(() => {
+        isDeleting = true;
+        isCursorBlinking.value = false;
+        twTimer = setTimeout(tick, PAUSE_BEFORE);
+      }, PAUSE_AFTER);
+      return;
+    }
+  } else {
+    // Deleting
+    charIndex--;
+    typedText.value = current.slice(0, charIndex);
+
+    if (charIndex === 0) {
+      // Done deleting — move to next phrase
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      twTimer = setTimeout(tick, PAUSE_BEFORE);
+      return;
+    }
+  }
+
+  twTimer = setTimeout(tick, isDeleting ? DELETE_SPEED : TYPE_SPEED);
+}
+
+
 
 onMounted(() => {
   const canvas = canvasRef.value;
@@ -235,10 +320,14 @@ onMounted(() => {
   const ro = new ResizeObserver(resize);
   ro.observe(canvas.parentElement);
 
+  // Start typewriter
+  twTimer = setTimeout(tick, 600);
+
   onUnmounted(() => {
     cancelAnimationFrame(animId);
     window.removeEventListener('mousemove', onMouse);
     ro.disconnect();
+    clearTimeout(twTimer);
   });
 });
 </script>
@@ -319,6 +408,40 @@ onMounted(() => {
   max-width: 680px;
   line-height: 1.6;
   text-align: center;
+  min-height: 3.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.typewriter-wrap {
+  display: inline;
+  white-space: nowrap;
+}
+
+.typewriter-text {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+}
+
+.typewriter-cursor {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-weight: 300;
+  margin-left: 1px;
+  text-shadow: 0 0 8px var(--accent-cyan);
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+
+.typewriter-cursor.blink {
+  animation: cursorBlink 0.9s step-start infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 .hero-actions {

@@ -236,8 +236,8 @@ const timelineItems = computed(() => [
     role: t('Technik Informatyk', 'IT Technician'),
     dateRange: '09/2018 - 05/2022',
     description: t(
-      'Baza, od której wszystko się zaczęło – od rozkręcania PC-tów i stawiania Windows Servera, po pierwsze linijki kodu w PHP i C++. Praktyczny poligon doświadczalny z zakresu sieci i web devu.',
-      'The foundation where it all started – from disassembling PCs and setting up Windows Server, to writing first lines of code in PHP and C++. A practical sandbox for networks and web dev.'
+      'Baza, od której wszystko się zaczęło - od rozkręcania PC-tów i stawiania Windows Servera, po pierwsze linijki kodu w PHP i C++. Praktyczny poligon doświadczalny z zakresu sieci i web devu.',
+      'The foundation where it all started - from disassembling PCs and setting up Windows Server, to writing first lines of code in PHP and C++. A practical sandbox for networks and web dev.'
     ),
     techs: ['Windows Server', 'Podstawy sieci', 'C++', 'PHP / JS'],
     iconSvg: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path>',

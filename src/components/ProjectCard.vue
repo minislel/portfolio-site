@@ -20,8 +20,9 @@
     <div class="project-card-body">
       <!-- Header Row: Logo on Left, Left-Aligned Title on Right -->
       <div class="project-header-row">
-        <div v-if="logoSvg" :class="['project-logo-badge', 'logo-' + accent, statusType === 'abandoned' ? 'logo-abandoned-tint' : '']">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="logoSvg"></svg>
+        <div v-if="logoImg || logoSvg" :class="['project-logo-badge', 'logo-' + accent, statusType === 'abandoned' ? 'logo-abandoned-tint' : '', logoImg ? 'logo-img-badge' : '']">
+          <img v-if="logoImg" :src="logoImg" :alt="title + ' logo'" class="logo-img" />
+          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="logoSvg"></svg>
         </div>
         <div class="project-title-group">
           <div class="title-category-row">
@@ -33,6 +34,16 @@
       </div>
 
       <p class="card-description text-left">{{ description }}</p>
+      <ul v-if="bullets && bullets.length" class="project-bullet-list">
+        <li v-for="(b, i) in bullets" :key="i">
+          <span class="project-bullet-arrow">▸</span>
+          <span class="project-bullet-item">
+            <span class="project-bullet-label">{{ b.label }}</span>
+            <span class="project-bullet-text">{{ b.text }}</span>
+          </span>
+        </li>
+      </ul>
+      <p v-if="funFact" class="card-fun-fact text-left"><strong>{{ funFact }}</strong></p>
 
       <!-- Prominent Tech Badges -->
       <div v-if="techList && techList.length" class="tech-badges-left">
@@ -50,12 +61,12 @@
         </span>
         <div class="project-links">
           <!-- Github link -->
-          <a v-if="github" :href="github" target="_blank" rel="noopener noreferrer" class="project-icon-link" aria-label="GitHub Repository">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <a v-if="github" :href="github" target="_blank" rel="noopener noreferrer" class="project-icon-link project-icon-link--github" aria-label="GitHub Repository">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
           </a>
           <!-- Live link -->
           <a v-if="live" :href="live" target="_blank" rel="noopener noreferrer" class="project-icon-link" aria-label="Live Demo">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           </a>
         </div>
       </div>
@@ -75,6 +86,14 @@ defineProps({
     type: String,
     required: true
   },
+  funFact: {
+    type: String,
+    default: ''
+  },
+  bullets: {
+    type: Array,
+    default: () => []
+  },
   category: {
     type: String,
     default: ''
@@ -88,6 +107,10 @@ defineProps({
     default: ''
   },
   logoSvg: {
+    type: String,
+    default: ''
+  },
+  logoImg: {
     type: String,
     default: ''
   },
@@ -234,6 +257,62 @@ defineProps({
   padding: 1.5rem 1.5rem 0.5rem 1.5rem;
 }
 
+.card-fun-fact {
+  margin-top: 0.65rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.card-fun-fact strong {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.project-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.project-bullet-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.project-bullet-arrow {
+  color: var(--accent-cyan);
+  font-size: 0.7rem;
+  margin-top: 0.22rem;
+  flex-shrink: 0;
+  text-shadow: 0 0 6px var(--accent-cyan);
+}
+
+.project-bullet-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.project-bullet-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  opacity: 0.85;
+}
+
+.project-bullet-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary, rgba(255,255,255,0.7));
+}
+
 .project-header-row {
   display: flex;
   align-items: flex-start;
@@ -252,6 +331,19 @@ defineProps({
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.14);
   margin-top: 2px;
+  overflow: hidden;
+}
+
+.logo-img-badge {
+  background: transparent;
+  border-color: transparent;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
 .logo-abandoned-tint {
@@ -351,6 +443,62 @@ defineProps({
 
 :deep(.project-meta) {
   padding: 1rem 1.5rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.project-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary, rgba(255,255,255,0.6));
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.project-icon-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.project-icon-link--github {
+  width: 46px;
+  height: 46px;
+  border-color: rgba(0, 242, 254, 0.3);
+  background: rgba(0, 242, 254, 0.06);
+  color: var(--accent-cyan);
+}
+
+.project-icon-link--github svg {
+  width: 24px;
+  height: 24px;
+}
+
+.project-icon-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.project-icon-link--github:hover {
+  background: rgba(0, 242, 254, 0.14);
+  border-color: rgba(0, 242, 254, 0.6);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.25);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 480px) {

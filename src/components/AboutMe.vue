@@ -16,27 +16,28 @@
 
       <!-- Card 2: Kim jestem? (67%) -->
       <PortfolioCard :title="t('Kim jestem?', 'Who am I?')" :tag="t('Biogram', 'Bio')" accent="cyan">
-        <ul>
+        <ul class="bio-list">
+          <li>
+            <span class="bullet">▸</span>
+            <span class="bio-item">
+              <span class="bio-text">{{ t('.NET backend developer (głównie), ale również pałam się wieloma innymi technologiami', '.NET backend developer (mainly), although I also enjoy working with other technologies.') }}</span>
+            </span>
+          </li>
+          <li>
+            <span class="bullet">▸</span>
+            <span class="bio-item">
+              <span class="bio-label">{{ t('Podejście', 'Approach') }}</span>
+              <span class="bio-text">{{ t('Zero lania wody. Wolę po prostu cieszyć się tym co robię niż pisać o „pasji do programowania".', 'No fluff. I prefer enjoying what I do rather than writing about "passion for programming".') }}</span>
+            </span>
+          </li>
 
-        
-        <p class="card-description text-left">
-          {{ t(
-            'Projektuję i wdrażam systemy w ekosystemie .NET, od czystej logiki biznesowej przez integracje z AI, po własną infrastrukturę serwerową.',
-            'I design and deploy systems in the .NET ecosystem, from pure business logic through AI integrations to my own server infrastructure.'
-          ) }}
-        </p>
-        <p class="card-description text-left" style="margin-top: 1rem;">
-          {{ t(
-            'Nie kręci mnie lanie wody o „pasji do kodu”. Wolę budować działające produkty, stawiać kontenery w domowym homelabie i dłubać w sprzęcie. Łączę backend z podejściem DevOps, bo lubię mieć pewność, że to, co napisałem, działa stabilnie od A do Z. Nie boję się wejść w dół stosu technicznego - niezależnie od tego, czy trzeba zoptymalizować zapytanie w SQL, ogarnąć konteneryzację w Dockerze, czy zdiagnozować problem fizycznie na płycie głównej.',
-            'I\'m not interested in fluff about "passion for code." I prefer building working products, running containers in my homelab, and tinkering with hardware. I combine backend engineering with a DevOps mindset because I like to make sure that what I wrote runs reliably end-to-end. I\'m not afraid to dig down the tech stack - whether it\'s optimizing an SQL query, setting up Docker containerization, or physically diagnosing a motherboard issue.'
-          ) }}
-        </p>
-        <p class="card-description text-left" style="margin-top: 1rem;">
-          {{ t(
-            'Poza byciem developerem, interesuję się elektroniką, sieciami komputerowymi i projektami DIY. Lutuję, składam, konfiguruję, testuję, naprawiam... i czasem coś wybucha. Ale to część zabawy.',
-            'Outside of development, I\'m interested in electronics, computer networks, and DIY projects. I solder, build, configure, test, repair... and sometimes things explode. But that\'s part of the fun.'
-          ) }}
-        </p>
+          <li>
+            <span class="bullet">▸</span>
+            <span class="bio-item">
+              <span class="bio-label">{{ t('Poza kodem', 'Beyond code') }}</span>
+              <span class="bio-text">{{ t('Elektronika, sieci, projekty DIY. Lutuję, składam, konfiguruję, testuję... I czasem coś wybucha (dosłownie), ale to część zabawy', 'Electronics, networking, DIY projects. I solder, build, configure, test... and sometimes something blows up (literally), but that\'s part of the fun') }}</span>
+            </span>
+          </li>
         </ul>
       </PortfolioCard>
     </div>
@@ -130,6 +131,50 @@ function scrollToSection(sectionId) {
 <style scoped>
 .text-left {
   text-align: left !important;
+}
+
+.bio-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.bio-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.bio-list .bullet {
+  color: var(--accent-cyan);
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  flex-shrink: 0;
+  text-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.bio-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.bio-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  opacity: 0.9;
+}
+
+.bio-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary, rgba(255,255,255,0.75));
 }
 
 .mono {

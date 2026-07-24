@@ -39,7 +39,7 @@
       <a href="mailto:marcin4kt@gmail.com" class="nav-cta-btn mono">{{ t('KONTAKT', 'EMAIL ME') }}</a>
       <button class="locale-switcher-btn" @click="toggleLocale" :title="t('Switch to English', 'Zmień na Polski')">
         <!-- Show the flag of the language that is NOT current (indicating what clicking will switch to) -->
-        <img v-if="locale === 'pl'" src="https://raw.githubusercontent.com/iamcal/emoji-data/master/img-apple-64/1f1ec-1f1e7.png" alt="English" class="ios-emoji-flag" />
+        <img v-if="locale === 'en'" src="https://raw.githubusercontent.com/iamcal/emoji-data/master/img-apple-64/1f1ec-1f1e7.png" alt="English" class="ios-emoji-flag" />
         <img v-else src="https://raw.githubusercontent.com/iamcal/emoji-data/master/img-apple-64/1f1f5-1f1f1.png" alt="Polski" class="ios-emoji-flag" />
       </button>
     </div>
