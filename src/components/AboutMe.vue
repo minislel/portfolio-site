@@ -16,13 +16,28 @@
 
       <!-- Card 2: Kim jestem? (67%) -->
       <PortfolioCard :title="t('Kim jestem?', 'Who am I?')" :tag="t('Biogram', 'Bio')" accent="cyan">
+        <ul>
+
+        
         <p class="card-description text-left">
           {{ t(
             'Projektuję i wdrażam systemy w ekosystemie .NET, od czystej logiki biznesowej przez integracje z AI, po własną infrastrukturę serwerową.',
             'I design and deploy systems in the .NET ecosystem, from pure business logic through AI integrations to my own server infrastructure.'
           ) }}
         </p>
-
+        <p class="card-description text-left" style="margin-top: 1rem;">
+          {{ t(
+            'Nie kręci mnie lanie wody o „pasji do kodu”. Wolę budować działające produkty, stawiać kontenery w domowym homelabie i dłubać w sprzęcie. Łączę backend z podejściem DevOps, bo lubię mieć pewność, że to, co napisałem, działa stabilnie od A do Z. Nie boję się wejść w dół stosu technicznego - niezależnie od tego, czy trzeba zoptymalizować zapytanie w SQL, ogarnąć konteneryzację w Dockerze, czy zdiagnozować problem fizycznie na płycie głównej.',
+            'I\'m not interested in fluff about "passion for code." I prefer building working products, running containers in my homelab, and tinkering with hardware. I combine backend engineering with a DevOps mindset because I like to make sure that what I wrote runs reliably end-to-end. I\'m not afraid to dig down the tech stack - whether it\'s optimizing an SQL query, setting up Docker containerization, or physically diagnosing a motherboard issue.'
+          ) }}
+        </p>
+        <p class="card-description text-left" style="margin-top: 1rem;">
+          {{ t(
+            'Poza byciem developerem, interesuję się elektroniką, sieciami komputerowymi i projektami DIY. Lutuję, składam, konfiguruję, testuję, naprawiam... i czasem coś wybucha. Ale to część zabawy.',
+            'Outside of development, I\'m interested in electronics, computer networks, and DIY projects. I solder, build, configure, test, repair... and sometimes things explode. But that\'s part of the fun.'
+          ) }}
+        </p>
+        </ul>
       </PortfolioCard>
     </div>
 
