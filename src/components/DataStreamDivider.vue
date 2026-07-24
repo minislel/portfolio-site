@@ -35,8 +35,10 @@ const lerpMouseY = ref(0);
 
 // Config
 const PACKET_COUNT = 15;
+const LOGICAL_HEIGHT = 36;
 let packets = [];
 let animationFrameId = null;
+let currentLogicalWidth = 300;
 
 // Determine colors
 const rgbColor = computed(() => {
@@ -102,13 +104,8 @@ function updateAndRender() {
   const canvas = canvasRef.value;
   const ctx = canvas.getContext('2d');
   
-  const w = canvas.width;
-  const h = canvas.height;
-  
-  // Logical dimensions
-  const dpr = window.devicePixelRatio || 1;
-  const lw = w / dpr;
-  const lh = h / dpr;
+  const lw = currentLogicalWidth || (wrapperRef.value ? wrapperRef.value.getBoundingClientRect().width : 300);
+  const lh = LOGICAL_HEIGHT;
   
   ctx.clearRect(0, 0, lw, lh);
   
@@ -226,11 +223,12 @@ function resize() {
   const wrapper = wrapperRef.value;
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   const rect = wrapper.getBoundingClientRect();
+  currentLogicalWidth = rect.width;
   
-  canvas.width = rect.width * dpr;
-  canvas.height = 36 * dpr; // Static logical height of 36px
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(LOGICAL_HEIGHT * dpr);
   canvas.style.width = `${rect.width}px`;
-  canvas.style.height = `36px`;
+  canvas.style.height = `${LOGICAL_HEIGHT}px`;
   
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
@@ -238,10 +236,12 @@ function resize() {
 
 onMounted(() => {
   initPacketSprite();
-  // Initialize packets
-  packets = Array.from({ length: PACKET_COUNT }, () => new Packet(window.innerWidth));
-  
   resize();
+  
+  // Initialize packets using the calculated logical width
+  const w = currentLogicalWidth || window.innerWidth;
+  packets = Array.from({ length: PACKET_COUNT }, () => new Packet(w));
+  
   window.addEventListener('resize', resize);
   
   // Pause animation when offscreen
