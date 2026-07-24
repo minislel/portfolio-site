@@ -150,7 +150,7 @@
             <div class="detail-sub-tile">
               <span class="detail-label">{{ t('Zakres prac', 'Scope of work') }}</span>
               <p class="detail-text rskoparki-text">
-                {{ t('Strona z wykopami ziemnymi dla ojca: deploy na Vercel, domena, optymalizacja SEO & GEO i wizytówka w Google.', 'Earthworks website for father: Vercel deployment, domain setup, SEO & GEO optimization, and Google profile.') }}
+                {{ t('Strona reklamująca lokalną firmę z usługami wykopów ziemnych: Stworzenie strony, deploy na Vercel, domena, optymalizacja SEO & GEO i wizytówka w Google.', 'Business website for earthworks & excavation services: Website development, Vercel deployment, domain setup, SEO & GEO optimization, and Google profile.') }}
               </p>
             </div>
 
