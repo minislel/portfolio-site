@@ -253,46 +253,18 @@ onUnmounted(() => {
 
 const timelineItems = computed(() => [
   {
-    year: '09/2018',
-    color: 'purple',
-    company: 'ZSP w Krynicy-Zdroju',
-    role: t('Technik Informatyk', 'IT Technician'),
-    dateRange: '09/2018 - 05/2022',
+    year: '01/2026',
+    color: 'cyan',
+    company: 'Maxima Consulting',
+    role: t('Junior .NET Engineer', 'Junior .NET Engineer'),
+    dateRange: '01/2026 - 06/2026',
     description: t(
-      'Baza, od której wszystko się zaczęło - od rozkręcania PC-tów i stawiania Windows Servera, po pierwsze linijki kodu w PHP i C++. Praktyczny poligon doświadczalny z zakresu sieci i web devu.',
-      'The foundation where it all started - from disassembling PCs and setting up Windows Server, to writing first lines of code in PHP and C++. A practical sandbox for networks and web dev.'
+      'Rozwój produkcyjnego kodu .NET (REST API) w międzynarodowym projekcie integracyjnym WMS dla klienta z USA. Autorska biblioteka APM w Hangfire, testy jednostkowe oraz udział w procesie deploymentu.',
+      'Developing production-grade .NET code (REST API) in a global WMS integration project for a client in the US. Custom APM library in Hangfire, unit testing, and participating in deployments.'
     ),
-    techs: ['Windows Server', 'Podstawy sieci', 'C++', 'PHP / JS'],
-    iconSvg: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path>',
-    logoImg: zspLogo
-  },
-  {
-    year: '02/2021',
-    color: 'blue',
-    company: 'Szpital SPZOZ w Krynicy-Zdroju',
-    role: t('Praktykant IT', 'IT Intern'),
-    dateRange: '02/2021 - 03/2021',
-    description: t(
-      'Operational Helpdesk w środowisku szpitalnym, inwentaryzacja hardware\'u oraz wsparcie użytkowników końcowych. Projektowanie piktogramów i infografik z pakietem Adobe i MS Office.',
-      'Operational Helpdesk in a hospital environment, hardware inventory, and end-user support. Design of pictograms and infographics using Adobe and MS Office suites.'
-    ),
-    techs: ['Helpdesk', 'Linux', 'Hardware', 'Adobe'],
-    iconSvg: '<rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line>',
-    logoImg: spzozLogo
-  },
-  {
-    year: '10/2023',
-    color: 'green',
-    company: 'WSEI w Krakowie',
-    role: t('Informatyka Stosowana (inż.)', 'Applied Computer Science (B.Eng.)'),
-    dateRange: t('10/2023 - Wiosna 2027', '10/2023 - Spring 2027'),
-    description: t(
-      'Rozwój inżynieryjny w obszarze budowania aplikacji webowych, backendu (.NET/C#) i baz danych, połączony z pracą w samorządzie studenckim. Współorganizacja hackathonów i targów uczelnianych.',
-      'Engineering development in web applications, backend (.NET/C#), and databases, combined with active work in the Student Government. Co-organizing hackathons and university job fairs.'
-    ),
-    techs: ['C# / .NET', 'ASP.NET MVC', 'OOP', 'Bazy Danych'],
-    iconSvg: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path><circle cx="12" cy="12" r="3"></circle>',
-    logoImg: wseiLogo
+    techs: ['C# / .NET', 'Hangfire & APM', 'Datadog'],
+    iconSvg: '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>',
+    logoImg: maximaLogo
   },
   {
     year: '10/2025',
@@ -309,18 +281,46 @@ const timelineItems = computed(() => [
     logoImg: maximaLogo
   },
   {
-    year: '01/2026',
-    color: 'cyan',
-    company: 'Maxima Consulting',
-    role: t('Junior .NET Engineer', 'Junior .NET Engineer'),
-    dateRange: '01/2026 - 06/2026',
+    year: '10/2023',
+    color: 'green',
+    company: 'WSEI w Krakowie',
+    role: t('Informatyka Stosowana (inż.)', 'Applied Computer Science (B.Eng.)'),
+    dateRange: t('10/2023 - Wiosna 2027', '10/2023 - Spring 2027'),
     description: t(
-      'Rozwój produkcyjnego kodu .NET (REST API) w międzynarodowym projekcie integracyjnym WMS dla klienta z USA. Autorska biblioteka APM w Hangfire, testy jednostkowe oraz udział w procesie deploymentu.',
-      'Developing production-grade .NET code (REST API) in a global WMS integration project for a client in the US. Custom APM library in Hangfire, unit testing, and participating in deployments.'
+      'Rozwój inżynieryjny w obszarze budowania aplikacji webowych, backendu (.NET/C#) i baz danych, połączony z pracą w samorządzie studenckim. Współorganizacja hackathonów i targów uczelnianych.',
+      'Engineering development in web applications, backend (.NET/C#), and databases, combined with active work in the Student Government. Co-organizing hackathons and university job fairs.'
     ),
-    techs: ['C# / .NET', 'Hangfire & APM', 'Datadog'],
-    iconSvg: '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>',
-    logoImg: maximaLogo
+    techs: ['C# / .NET', 'ASP.NET MVC', 'OOP', 'Bazy Danych'],
+    iconSvg: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path><circle cx="12" cy="12" r="3"></circle>',
+    logoImg: wseiLogo
+  },
+  {
+    year: '02/2021',
+    color: 'blue',
+    company: 'Szpital SPZOZ w Krynicy-Zdroju',
+    role: t('Praktykant IT', 'IT Intern'),
+    dateRange: '02/2021 - 03/2021',
+    description: t(
+      'Operational Helpdesk w środowisku szpitalnym, inwentaryzacja hardware\'u oraz wsparcie użytkowników końcowych. Projektowanie piktogramów i infografik z pakietem Adobe i MS Office.',
+      'Operational Helpdesk in a hospital environment, hardware inventory, and end-user support. Design of pictograms and infographics using Adobe and MS Office suites.'
+    ),
+    techs: ['Helpdesk', 'Linux', 'Hardware', 'Adobe'],
+    iconSvg: '<rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line>',
+    logoImg: spzozLogo
+  },
+  {
+    year: '09/2018',
+    color: 'purple',
+    company: 'ZSP w Krynicy-Zdroju',
+    role: t('Technik Informatyk', 'IT Technician'),
+    dateRange: '09/2018 - 05/2022',
+    description: t(
+      'Baza, od której wszystko się zaczęło - od rozkręcania PC-tów i stawiania Windows Servera, po pierwsze linijki kodu w PHP i C++. Praktyczny poligon doświadczalny z zakresu sieci i web devu.',
+      'The foundation where it all started - from disassembling PCs and setting up Windows Server, to writing first lines of code in PHP and C++. A practical sandbox for networks and web dev.'
+    ),
+    techs: ['Windows Server', 'Podstawy sieci', 'C++', 'PHP / JS'],
+    iconSvg: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path>',
+    logoImg: zspLogo
   }
 ]);
 
